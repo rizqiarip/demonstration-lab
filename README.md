@@ -22,14 +22,13 @@
   EXTERNAL_URL="http://gitlab-ce.arip.com" yum install -y gitlab-ce
   ```
   
-## Membuat issue list / board Untuk membuat kanban board
+## Membuat issue list / board untuk membuat kanban board
   
   Dashboard Gitlab > Issues > Board > New Issue
   
   ![image](https://user-images.githubusercontent.com/89076954/195568928-f333f085-370d-4822-b674-5fc055378372.png)
   
-  ![image](https://user-images.githubusercontent.com/89076954/195569393-c5adeed4-c07c-441e-ba29-2493a74e3df1.png)
-
+  ![image](https://user-images.githubusercontent.com/89076954/195570056-eb0661b7-10b0-4633-a3f7-a84a48a791bb.png)
   
 # Kubernetes Cluster
 
