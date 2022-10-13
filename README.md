@@ -28,7 +28,7 @@
   
   ![image](https://user-images.githubusercontent.com/89076954/195568928-f333f085-370d-4822-b674-5fc055378372.png)
   
-  ![image](https://user-images.githubusercontent.com/89076954/195570056-eb0661b7-10b0-4633-a3f7-a84a48a791bb.png)
+  ![image](https://user-images.githubusercontent.com/89076954/195570453-18705a63-f099-4e34-90aa-fc670a05426f.png)
   
 # Kubernetes Cluster
 
