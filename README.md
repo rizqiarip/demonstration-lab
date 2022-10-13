@@ -1,10 +1,10 @@
-# Demonstration-lab Documentation
+# Demonstration Lab Documentation
   1. Gitlab CE
   2. Kubernetes Cluster
   3. Jenkins CI/CD
   4. Sonarqube CE
-## Gitlab CE
-# Instalasi Gitlab CE
+# Gitlab CE
+## Instalasi Gitlab CE
   
   - Install dependencies 
   ```console
@@ -17,13 +17,13 @@
   EXTERNAL_URL="http://gitlab-ce.arip.com" yum install -y gitlab-ce
   ```
   
-# Membuat repository untuk menyimpan source code
+## Membuat repository untuk menyimpan source code
 
-# Membuat issue list / board Untuk membuat kanban board
-## Kubernetes Cluster
-# Instalasi kubernetes cluster, 1 master 1 worker
-# Instalasi dan Konfigurasi ingress controller Nginx
-# Membuat Dynamic Storage Class dengan NFS
-# Deploy Aplikasi Wordpress + DB (Menggunakan PVC)
-# Instalasi dan Konfigurasi MetalLB untuk Load Balancer
-# Deploy Aplikasi Nginx dengan eskpos akses Load Balancer
+## Membuat issue list / board Untuk membuat kanban board
+# Kubernetes Cluster
+## Instalasi kubernetes cluster, 1 master 1 worker
+## Instalasi dan Konfigurasi ingress controller Nginx
+## Membuat Dynamic Storage Class dengan NFS
+## Deploy Aplikasi Wordpress + DB (Menggunakan PVC)
+## Instalasi dan Konfigurasi MetalLB untuk Load Balancer
+## Deploy Aplikasi Nginx dengan eskpos akses Load Balancer
