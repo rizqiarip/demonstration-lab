@@ -4,23 +4,42 @@
   3. Jenkins CI/CD
   4. Sonarqube CE
 # Gitlab CE
+  
+  - Instalasi Gitlab CE
+  - Membuat repository untuk menyimpan source code
+  - Membuat issue list/board untuk membuat kanban board
+   
 ## Instalasi Gitlab CE
   
-  - Install dependencies 
+  - Install dependencies for Gitlab-ce 
   ```console
   yum install -y curl postfix ca-certificates
   ```
   
-  - Install Gitlab-ce
+  - Install `Gitlab-ce`
   ```console
   curl https://packages.gitlab.com/install/repositories/gitlab/gitlab-ce/script.rpm.sh | sudo bash
   EXTERNAL_URL="http://gitlab-ce.arip.com" yum install -y gitlab-ce
   ```
   
-## Membuat repository untuk menyimpan source code
-
 ## Membuat issue list / board Untuk membuat kanban board
+  
+  Dashboard Gitlab > Issues > Board > New Issue
+  
+  ![image](https://user-images.githubusercontent.com/89076954/195568928-f333f085-370d-4822-b674-5fc055378372.png)
+  
+  ![image](https://user-images.githubusercontent.com/89076954/195569393-c5adeed4-c07c-441e-ba29-2493a74e3df1.png)
+
+  
 # Kubernetes Cluster
+
+  - Instalasi Kubernetes Cluster, 1 Master dan 1 Worker
+  - Instalasi dan konfigurasi Ingress Controller Nginx
+  - Membaut Dynamic Storage Class dengan NFS
+  - Deploy Aplikasi Wordpress dan Database MySQL menggunakan PVC
+  - Instalasi dan konfigurasi MetalLB untuk Load Balancer
+  - Deploy Aplikasi Nginx dengan ekspos akses Load Balancer menggunakan MetalLB
+
 ## Instalasi kubernetes cluster, 1 master 1 worker
 ## Instalasi dan Konfigurasi ingress controller Nginx
 ## Membuat Dynamic Storage Class dengan NFS
