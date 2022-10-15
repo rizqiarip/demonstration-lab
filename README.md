@@ -4,16 +4,14 @@
   2. Kubernetes Cluster (10.8.60.227, 10.8.60.228)
   3. Jenkins CI/CD (10.8.60.226)
 
-# Gitlab CE
-
 ## Gitlab-ce Installation
   
-  - Install dependencies for `Gitlab-ce` 
+  - Install dependencies for `gitlab-ce` 
   ```console
   yum install -y curl postfix ca-certificates
   ```
   
-  - Install `Gitlab-ce`
+  - Install `gitlab-ce`
   ```console
   curl https://packages.gitlab.com/install/repositories/gitlab/gitlab-ce/script.rpm.sh | sudo bash
   EXTERNAL_URL="http://gitlab-ce.arip.com" yum install -y gitlab-ce
@@ -25,18 +23,9 @@
   
   ![image](https://user-images.githubusercontent.com/89076954/195581550-ffeb6041-d3d5-4793-aa67-37911f3ec90c.png)
   
-# Kubernetes Cluster
-
-  - Instalasi Kubernetes Cluster, 1 Master dan 1 Worker
-  - Instalasi dan konfigurasi Ingress Controller Nginx
-  - Membaut Dynamic Storage Class dengan NFS
-  - Deploy Aplikasi Wordpress dan Database MySQL menggunakan PVC
-  - Instalasi dan konfigurasi MetalLB untuk Load Balancer
-  - Deploy Aplikasi Nginx dengan ekspos akses Load Balancer menggunakan MetalLB
-
 ## Kubernetes Cluster Installation with 1 Master and 1 Worker node
 
-  - Install `Docker` (Master & Worker Node)
+  - Install `docker` (Master & Worker Node)
   
   ```console
   sudo apt-get update
@@ -54,7 +43,7 @@
   EOF 
   ```
   
-  - Check `Docker` status
+  - Check `docker` status
   
   ```console
   sudo systemctl enable docker
@@ -104,14 +93,61 @@
   --discovery-token-ca-cert-hash sha256:607f8f03d495b111de0685fc6811679cab7912f1e4f38a65c48cc734cdb944cd
   ```
   
-  - Check Nodes
+  - Check Nodes (Master Node)
   
   ```console
   kubectl get nodes
   ```
   
+  -  Setup Helm (Master Node)
+
+  ```console
+  sudo apt install apt-transport-https --yes
+  curl https://baltocdn.com/helm/signing.asc | sudo apt-key add -
+  echo "deb https://baltocdn.com/helm/stable/debian/ all main" | sudo tee /etc/apt/sources.list.d/helm-stable-debian.list
+
+  sudo apt install -y helm
+  ```
+  
 ## Instalasi dan Konfigurasi ingress controller Nginx 
+
+  - Install Ingress Controller Nginx using helm
+  
+  ```console
+  helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+  helm repo update
+  helm install ingress ingress-nginx/ingress-nginx --set controller.service.loadBalancerIP=10.8.60.227 -n ingress --create-namespace
+  ```
+  
 ## Membuat Dynamic Storage Class dengan NFS
+
+  - Install `nfs-server` in Worker node
+  
+  ```console
+  sudo apt install nfs-kernel-server nfs-common portmap
+  sudo systemctl start nfs-server
+  sudo systemctl status nfs-server  
+  ```
+  
+  - Setup directory NFS in Worker node
+  
+  ```console
+  mkdir -p /data 
+  sudo nano /etc/exports
+  /data  *(rw,sync,no_subtree_check,no_root_squash,insecure)"
+  sudo exportfs -rv
+  showmount -e
+  ```
+  
+  - Install nfs using helm in Master node
+  
+  ```console
+  helm repo add nfs-subdir-external-provisioner https://kubernetes-sigs.github.io/nfs-subdir-external-provisioner/
+  helm install nfs nfs-subdir-external-provisioner/nfs-subdir-external-provisioner --set nfs.server=10.8.60.228 
+  --set nfs.path=/data --set storageClass.name=nfs --set storageClass.defaultClass=true -n nfs --create-namespace
+  sudo mount -t nfs 10.8.60.228:/data /mnt
+  ```
+  
 ## Deploy Aplikasi Wordpress + DB (Menggunakan PVC)
 ## Instalasi dan Konfigurasi MetalLB untuk Load Balancer
 ## Deploy Aplikasi Nginx dengan eskpos akses Load Balancer
