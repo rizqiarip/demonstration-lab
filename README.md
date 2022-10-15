@@ -107,7 +107,7 @@
   --discovery-token-ca-cert-hash sha256:607f8f03d495b111de0685fc6811679cab7912f1e4f38a65c48cc734cdb944cd
   ```
   
-## Instalasi dan Konfigurasi ingress controller Nginx
+## Instalasi dan Konfigurasi ingress controller Nginx 
 ## Membuat Dynamic Storage Class dengan NFS
 ## Deploy Aplikasi Wordpress + DB (Menggunakan PVC)
 ## Instalasi dan Konfigurasi MetalLB untuk Load Balancer
