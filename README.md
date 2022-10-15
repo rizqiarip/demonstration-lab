@@ -1,17 +1,14 @@
 # Demonstration Lab Documentation
-  1. Gitlab CE
-  2. Kubernetes Cluster
-  3. Jenkins CI/CD
-  4. Sonarqube CE
+
+  1. Gitlab & Sonarqube (10.8.60.174)
+  2. Kubernetes Cluster (10.8.60.227, 10.8.60.228)
+  3. Jenkins CI/CD (10.8.60.226)
+
 # Gitlab CE
+
+## Gitlab-ce Installation
   
-  - Instalasi Gitlab CE
-  - Membuat repository untuk menyimpan source code
-  - Membuat issue list/board untuk membuat kanban board
-   
-## Instalasi Gitlab CE
-  
-  - Install dependencies for Gitlab-ce 
+  - Install dependencies for `Gitlab-ce` 
   ```console
   yum install -y curl postfix ca-certificates
   ```
@@ -22,7 +19,7 @@
   EXTERNAL_URL="http://gitlab-ce.arip.com" yum install -y gitlab-ce
   ```
   
-## Membuat issue list / board untuk membuat kanban board
+## Create issue list for kanban board
   
   Dashboard Gitlab > Issues > Board > New Issue
   
@@ -37,9 +34,9 @@
   - Instalasi dan konfigurasi MetalLB untuk Load Balancer
   - Deploy Aplikasi Nginx dengan ekspos akses Load Balancer menggunakan MetalLB
 
-## Instalasi kubernetes cluster, 1 master 1 worker
+## Kubernetes Cluster Installation with 1 Master and 1 Worker node
 
-  - Instal `Docker` (Master & Worker Node)
+  - Install `Docker` (Master & Worker Node)
   
   ```console
   sudo apt-get update
@@ -57,7 +54,7 @@
   EOF 
   ```
   
-  - Cek status `Docker`
+  - Check `Docker` status
   
   ```console
   sudo systemctl enable docker
@@ -66,7 +63,7 @@
   sudo systemctl status docker
   ```
   
-  - Instal Kubernetes Tools (Master & Worker Node)
+  - Install Kubernetes Tools like Kubeadm, Kubelet, Kubectl (Master & Worker Node)
   
   ```console
   sudo apt-get update
@@ -105,6 +102,12 @@
 
   sudo kubeadm join --token s9k49t.do6h0xwn8xcvicuq 10.8.60.227:6443 
   --discovery-token-ca-cert-hash sha256:607f8f03d495b111de0685fc6811679cab7912f1e4f38a65c48cc734cdb944cd
+  ```
+  
+  - Check Nodes
+  
+  ```console
+  kubectl get nodes
   ```
   
 ## Instalasi dan Konfigurasi ingress controller Nginx 
