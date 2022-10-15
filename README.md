@@ -17,7 +17,7 @@
   EXTERNAL_URL="http://gitlab-ce.arip.com" yum install -y gitlab-ce
   ```
   
-## Create issue list for kanban board
+### Create issue list for kanban board
   
   Dashboard Gitlab > Issues > Board > New Issue
   
