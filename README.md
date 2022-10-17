@@ -121,7 +121,7 @@
   
 ## Membuat Dynamic Storage Class dengan NFS
 
-  - Install `nfs-server` in Worker node
+  - Install `nfs-server` in Master and Worker node
   
   ```console
   sudo apt install nfs-kernel-server nfs-common portmap
@@ -139,13 +139,23 @@
   showmount -e
   ```
   
-  - Install nfs using helm in Master node
+  - Tes NFS from master to worker
+  
+  ```console
+  sudo mount -t nfs 10.8.60.228:/data /mnt
+  ```
+  
+  - Method 1 connecting to nfs directly
+  
+  ```console
+  ```
+  
+  - Method 2 using persistent volume claim and storage class
   
   ```console
   helm repo add nfs-subdir-external-provisioner https://kubernetes-sigs.github.io/nfs-subdir-external-provisioner/
   helm install nfs nfs-subdir-external-provisioner/nfs-subdir-external-provisioner --set nfs.server=10.8.60.228 
   --set nfs.path=/data --set storageClass.name=nfs --set storageClass.defaultClass=true -n nfs --create-namespace
-  sudo mount -t nfs 10.8.60.228:/data /mnt
   ```
   
 ## Deploy Aplikasi Wordpress + DB (Menggunakan PVC)
