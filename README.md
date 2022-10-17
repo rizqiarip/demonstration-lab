@@ -23,7 +23,7 @@
   
   ![image](https://user-images.githubusercontent.com/89076954/195581550-ffeb6041-d3d5-4793-aa67-37911f3ec90c.png)
   
-## Kubernetes Cluster Installation with 1 Master and 1 Worker node
+## Kubernetes Cluster Installation (1 Master and 1 Worker)
 
   - Install `docker` (Master & Worker Node)
   
@@ -52,7 +52,7 @@
   sudo systemctl status docker
   ```
   
-  - Install Kubernetes Tools like Kubeadm, Kubelet, Kubectl (Master & Worker Node)
+  - Install Kubernetes tools (Master & Worker Node)
   
   ```console
   sudo apt-get update
@@ -67,7 +67,7 @@
   sudo apt-mark hold kubelet kubeadm kubectl
   ```
   
-  - Setup Cluster (Master Node)
+  - Setup cluster (Master Node)
   
   ```console
   swapon -s
@@ -83,7 +83,7 @@
   sudo openssl x509 -pubkey -in /etc/kubernetes/pki/ca.crt | openssl rsa -pubin -outform der 2>/dev/null | openssl dgst -sha256 -hex | sed 's/^.* //'
   ```
   
-  - Join Cluster (Worker Node)
+  - Join cluster (Worker Node)
   
   ```console
   swapon -s
@@ -93,13 +93,13 @@
   --discovery-token-ca-cert-hash sha256:607f8f03d495b111de0685fc6811679cab7912f1e4f38a65c48cc734cdb944cd
   ```
   
-  - Check Nodes (Master Node)
+  - Check nodes (Master Node)
   
   ```console
   kubectl get nodes
   ```
   
-  -  Setup Helm (Master Node)
+  - Install `helm` (Master Node)
 
   ```console
   sudo apt install apt-transport-https --yes
@@ -111,7 +111,7 @@
   
 ## Instalasi dan Konfigurasi ingress controller Nginx 
 
-  - Install Ingress Controller Nginx using helm
+  - Install Ingress Controller Nginx using helm (Master node)
   
   ```console
   helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
@@ -139,15 +139,31 @@
   showmount -e
   ```
   
-  - Tes NFS from master to worker
+  - Tes NFS from master to worker (Master node)
   
   ```console
+  showmount -e 10.8.60.228
   sudo mount -t nfs 10.8.60.228:/data /mnt
+  touch /mnt/testfrommaster
   ```
   
   - Method 1 connecting to nfs directly
   
-  ```console
+  ```
+  spec:
+  volumes:
+    - name: nfs-volume
+      nfs:
+        server: arip-kube-worker
+        path: /data
+  containers:
+    - name: app
+      image: alpine
+      volumeMounts:
+        - name: nfs-volume
+          mountPath: /mnt
+      command: ["/bin/sh"]
+      args: ["-c", "while true; do touch /mnt/tes-method1; sleep 5; done"]
   ```
   
   - Method 2 using persistent volume claim and storage class
