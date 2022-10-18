@@ -147,7 +147,7 @@
   touch /mnt/testfrommaster
   ```
   
-  - Method 1 connecting to nfs directly
+  - Method 1 connecting pod to nfs directly
   
   ```
   spec:
@@ -166,17 +166,49 @@
       args: ["-c", "while true; do touch /mnt/tes-method1; sleep 5; done"]
   ```
   
-  - Method 2 using persistent volume claim and storage class
+  - Method 2 using persistent volume claim and storageclass
   
   ```console
   helm repo add nfs-subdir-external-provisioner https://kubernetes-sigs.github.io/nfs-subdir-external-provisioner/
-  helm install nfs-subdir-external-provisioner nfs-subdir-external-provisioner/nfs-subdir-external-provisioner \
-  --create-namespace --namespace nfs-provisioner --set nfs.server=arip-kube-worker --set nfs.path=/data --set storageClass.defaultClass=true
+  helm install nfs nfs-subdir-external-provisioner/nfs-subdir-external-provisioner --create-namespace \
+  --namespace nfs --set nfs.server=arip-kube-worker --set nfs.path=/data --set storageClass.defaultClass=true
+  kubectl get sc
   ```
   
-  - 
+  - Create persistent volume claim (pvc) using nfs-client storageclass
   
+  ```console
+  apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    name: sc-nfs-pvc
+  spec:
+    accessModes:
+      - ReadWriteOnce
+    storageClassName: nfs-client
+    resources:
+      requests:
+        storage: 2Gi
+  ```
+  
+  - Create deployment nginx with NFS mount
+  
+  ```console
+  spec:
+    volumes:
+      - name: nfs-vols
+        persistentVolumeClaim:
+          claimName: pvc-scnfs
+    containers:
+      - image: nginx
+        name: nginx
+        volumeMounts:
+        - name: nfs-vols
+          mountPath: /usr/share/nginx/html
+  ```
+      
 ## Deploy Aplikasi Wordpress + DB (Menggunakan PVC)
   
 ## Instalasi dan Konfigurasi MetalLB untuk Load Balancer
+
 ## Deploy Aplikasi Nginx dengan eskpos akses Load Balancer
