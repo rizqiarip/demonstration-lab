@@ -108,7 +108,46 @@
 
   sudo apt install -y helm
   ```
+
+## Instalasi dan Konfigurasi MetalLB untuk Load Balancer
   
+  - Set strictARP value to "true"
+  
+  ```console
+  apiVersion: kubeproxy.config.k8s.io/v1alpha1
+  kind: KubeProxyConfiguration
+  mode: "ipvs"
+  ipvs:
+    strictARP: true
+  ```
+  
+  - Install metallb by manifest
+  
+  ```console
+  kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.13.7/config/manifests/metallb-native.yaml
+  ```
+  
+  - Configure ip address pool for metallb
+  
+  ```
+  apiVersion: metallb.io/v1beta1
+  kind: IPAddressPool
+  metadata:
+    name: first-pool
+    namespace: metallb-system
+  spec:
+    addresses:
+    - 10.8.60.229-10.8.60.231
+  ---
+  kind: L2Advertisement
+  metadata:
+    name: example
+    namespace: metallb-system
+  spec:
+  ipAddressPools:
+  - first-pool
+  ```
+   
 ## Instalasi dan konfigurasi ingress controller Nginx 
 
   - Install Ingress Controller Nginx using helm (Master node)
@@ -116,7 +155,7 @@
   ```console
   helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
   helm repo update
-  helm install nginx-ingress ingress-nginx/ingress-nginx --set controller.publishService.enabled=true
+  helm install ingress ingress-nginx/ingress-nginx --set controller.service.loadBalancerIP=10.8.60.229 -n ingress --create-namespace
   ```
   
 ## Membuat dynamic Storageclass dengan NFS
@@ -209,6 +248,4 @@
       
 ## Deploy Aplikasi Wordpress + DB (Menggunakan PVC)
   
-## Instalasi dan Konfigurasi MetalLB untuk Load Balancer
-
 ## Deploy Aplikasi Nginx dengan eskpos akses Load Balancer
