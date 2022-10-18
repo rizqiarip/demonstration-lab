@@ -309,212 +309,32 @@
   - Create namespace & secret
 
   ```
-  apiVersion: v1
-  kind: Namespace
-  metadata:
-    name: wordpress
-  ---
-  apiVersion: v1
-  kind: Secret
-  metadata:
-    namespace: wordpress
-    name: mysql-pass
-  type: Opaque
-  data:
-    password: YXJpcDEyMw==
+  kubectl create -f https://raw.githubusercontent.com/rizqiarip/repository-file/main/namespace-secret.yaml
+  
   ```
   
   - Create persistent volume (pv)
   
   ```
-  apiVersion: v1
-  kind: PersistentVolume
-  metadata:
-    namespace: wordpress
-    name: wordpress-persistent-storage
-    labels:
-      app: wordpress
-      tier: frontend
-  spec:
-    capacity:
-      storage: 10Gi
-    accessModes:
-      - ReadWriteMany
-    nfs:
-      server: arip-kube-worker
-      path: "/html"
-  ---
-  apiVersion: v1
-  kind: PersistentVolume
-  metadata:
-    namespace: wordpress
-    name: mysql-persistent-storage
-    labels:
-      app: wordpress
-      tier: mysql
-  spec:
-    capacity:
-      storage: 10Gi
-    accessModes:
-      - ReadWriteMany
-    nfs:
-      server: arip-kube-worker
-      path: "/mysql"
+  kubectl create -f https://raw.githubusercontent.com/rizqiarip/repository-file/main/pv.yaml
   ```
   
   - Create persistent volume claim (pvc)
   
   ```
-  apiVersion: v1
-  kind: PersistentVolumeClaim
-  metadata:
-    namespace: wordpress
-    name: wordpress-persistent-storage
-    labels:
-      app: wordpress
-  spec:
-    accessModes:
-      - ReadWriteMany
-    resources:
-      requests:
-        storage: 6Gi
-  ---
-  apiVersion: v1
-  kind: PersistentVolumeClaim
-  metadata:
-    namespace: wordpress
-    name: mysql-persistent-storage
-    labels:
-      app: wordpress
-  spec:
-    accessModes:
-      - ReadWriteMany
-    resources:
-      requests:
-        storage: 6Gi
+  kubectl create -f https://raw.githubusercontent.com/rizqiarip/repository-file/main/pvc.yaml
   ```
   
-  - Deploy Mysql
+  - Deploy Mysql deployment
   
-  ```
-  apiVersion: v1
-  kind: Service
-  metadata:
-    namespace: wordpress
-    name: wordpress-mysql
-    labels:        
-      app: wordpress
-  spec:
-    ports:
-      - port: 3306
-    selector:
-      app: wordpress
-      tier: mysql
-    clusterIP: None
-  ---
-  apiVersion:  apps/v1
-  kind: Deployment
-  metadata:
-    namespace: wordpress
-    name: wordpress-mysql
-    labels:
-      app: wordpress
-  spec:
-    selector:
-      matchLabels:
-        app: wordpress
-        tier: mysql
-    strategy:
-      type: Recreate
-    template:
-      metadata:
-        labels:
-          app: wordpress
-          tier: mysql
-      spec:
-        containers:
-        - image: mysql:5.6
-          name: mysql
-          env:
-          - name: MYSQL_ROOT_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: mysql-pass   
-                key: password
-          ports:
-          - containerPort: 3306
-            name: mysql
-          volumeMounts:
-          - name: mysql-persistent-storage
-            mountPath: "/var/lib/mysql"
-        volumes:
-        - name: mysql-persistent-storage
-          persistentVolumeClaim:
-            claimName: mysql-persistent-storage
-
+  ```console
+  kubectl create -f https://raw.githubusercontent.com/rizqiarip/repository-file/main/mysql-deployment.yaml
   ```
   
-  - Deploy Wordpress
+  - Deploy Wordpress deployment
   
-  ```
-  apiVersion: v1
-  kind: Service
-  metadata:
-    namespace: wordpress
-    name: wordpress
-    labels:
-      app: wordpress
-  spec:
-    ports:
-      - nodePort: 30001
-        port: 80
-        targetPort: 80
-    selector:
-      app: wordpress
-      tier: frontend
-    type: NodePort
-  ---
-  apiVersion: apps/v1
-  kind: Deployment
-  metadata:
-    namespace: wordpress
-    name: wordpress
-    labels:
-      app: wordpress
-  spec:
-    selector:
-      matchLabels:
-        app: wordpress
-        tier: frontend
-    strategy:
-      type: Recreate
-    template:
-      metadata:
-        labels:
-          app: wordpress
-          tier: frontend
-      spec:
-        containers:
-        - image: wordpress:4.8-apache
-          name: wordpress
-          env:
-          - name: WORDPRESS_DB_HOST
-            value: wordpress-mysql
-          - name: WORDPRESS_DB_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: mysql-pass
-                key: password
-          ports:
-          - containerPort: 80
-            name: wordpress
-          volumeMounts:
-          - name: wordpress-persistent-storage
-            mountPath: "/var/www/html" 
-        volumes:
-        - name: wordpress-persistent-storage
-          persistentVolumeClaim:
-            claimName: wordpress-persistent-storage
+  ```console
+  kubectl create -f https://raw.githubusercontent.com/rizqiarip/repository-file/main/wordpress-deployment.yaml
   ```
   
   - Check pod in wordpress namespace
@@ -538,7 +358,7 @@
   ```
   
   - Update ingress, add host wordpress.arip with service wordpress
-  
+  - Define domain in /etc/hosts or /drivers/etc/hosts (windows)
   - Tes access wordpress from cli or web browser
   
   ```console
