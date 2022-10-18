@@ -109,17 +109,17 @@
   sudo apt install -y helm
   ```
   
-## Instalasi dan Konfigurasi ingress controller Nginx 
+## Instalasi dan konfigurasi ingress controller Nginx 
 
   - Install Ingress Controller Nginx using helm (Master node)
   
   ```console
   helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
   helm repo update
-  helm install ingress ingress-nginx/ingress-nginx --set controller.service.loadBalancerIP=10.8.60.227 -n ingress --create-namespace
+  helm install nginx-ingress ingress-nginx/ingress-nginx --set controller.publishService.enabled=true
   ```
   
-## Membuat Dynamic Storage Class dengan NFS
+## Membuat dynamic Storageclass dengan NFS
 
   - Install `nfs-server` in Master and Worker node
   
