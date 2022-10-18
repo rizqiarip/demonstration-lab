@@ -121,13 +121,13 @@
     strictARP: true
   ```
   
-  - Install metallb by manifest
+  - Install `metallb` by manifest
   
   ```console
   kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.13.7/config/manifests/metallb-native.yaml
   ```
   
-  - Configure ip address pool for metallb
+  - Configure ip address pool for `metallb`
   
   ```
   apiVersion: metallb.io/v1beta1
@@ -244,7 +244,7 @@
   touch /mnt/testfrommaster
   ```
   
-  - Method 1 connecting pod to nfs directly
+  - Method 1 connecting pod to `nfs-server` directly
   
   ```
   spec:
