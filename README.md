@@ -308,20 +308,20 @@
 
   - Create namespace & secret
 
-  ```
+  ```console
   kubectl create -f https://raw.githubusercontent.com/rizqiarip/repository-file/main/namespace-secret.yaml
   
   ```
   
   - Create persistent volume (pv)
   
-  ```
+  ```console
   kubectl create -f https://raw.githubusercontent.com/rizqiarip/repository-file/main/pv.yaml
   ```
   
   - Create persistent volume claim (pvc)
   
-  ```
+  ```console
   kubectl create -f https://raw.githubusercontent.com/rizqiarip/repository-file/main/pvc.yaml
   ```
   
