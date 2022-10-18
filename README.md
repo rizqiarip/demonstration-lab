@@ -533,7 +533,16 @@
   - Check directory nfs inside pod (/var/www/html)
   
   ```console
+  kubectl exec -it wordpress-55456b9bcc-9zg6n bash -n wordpress
   ls && ls frommaster
   ```
   
+  - Update ingress, add host wordpress.arip with service wordpress
+  
+  - Tes access wordpress from cli or web browser
+  
+  ```console
+  curl wordpress.arip
+  ```
+
 # Jenkins & Sonarqube ce
