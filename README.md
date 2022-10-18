@@ -1,7 +1,7 @@
 # Demonstration Lab Documentation
 
   1. Gitlab & Sonarqube (10.8.60.174)
-  2. Kubernetes Cluster (10.8.60.227, 10.8.60.228)
+  2. Kubernetes Cluster (10.8.60.227, 10.8.60.228, 10.8.60.229, 10.8.60.230, 10.8.60.231)
   3. Jenkins CI/CD (10.8.60.226)
 
 ## Gitlab-ce Installation
@@ -148,6 +148,13 @@
   - first-pool
   ```
    
+  - Tes deployment nginx using assigned ip loadbalancer
+  
+  ```console
+  kubectl create deploy nginx-test --image nginx && kubectl expose deploy nginx-test --port 80 --type LoadBalancer
+  kubectl delete deploy nginx-test && kubectl delete svc nginx-test
+  ```
+  
 ## Instalasi dan konfigurasi ingress controller Nginx 
 
   - Install Ingress Controller Nginx using helm (Master node)
@@ -247,5 +254,3 @@
   ```
       
 ## Deploy Aplikasi Wordpress + DB (Menggunakan PVC)
-  
-## Deploy Aplikasi Nginx dengan eskpos akses Load Balancer
