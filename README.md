@@ -160,9 +160,60 @@
   - Install Ingress Controller Nginx using helm (Master node)
   
   ```console
-  helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+  helm repo add nginx-stable https://helm.nginx.com/stable
   helm repo update
-  helm install ingress ingress-nginx/ingress-nginx --set controller.service.loadBalancerIP=10.8.60.229 -n ingress --create-namespace
+  helm install ingress nginx-stable/nginx-ingress
+  kubectl get svc ingress-nginx-ingress
+  ```
+  
+  - Create deployment for testing
+  
+  ```console
+  kubectl create deployment nginx --image nginx
+  kubectl create deployment apache --image httpd
+  kubectl expose deployment nginx --port 80 --type NodePort
+  kubectl expose deployment apache --port 80 --type LoadBalancer
+  ```
+  
+  - Create ingress and target the two services that have been created
+  
+  ```
+  spec:
+    ingressClassName: nginx
+    rules:
+      - host: nginx.arip
+        http:
+          paths:
+            - path: /
+              pathType: Prefix
+              backend:
+                service:
+                  name: nginx
+                  port:
+                    number: 80
+      - host: apache.arip
+        http:
+          paths:
+            - path: /
+              pathType: Prefix
+              backend:
+                service:
+                  name: apache
+                  port:
+                    number: 80
+  ```
+  
+  - Define domain in /etc/hosts
+  
+  ```
+  10.8.60.229 nginx.arip apache.arip
+  ```
+  
+  - Tes access to deployment
+  
+  ```console
+  curl nginx.arip
+  curl apache.arip
   ```
   
 ## Membuat dynamic Storageclass dengan NFS
@@ -254,3 +305,235 @@
   ```
       
 ## Deploy Aplikasi Wordpress + DB (Menggunakan PVC)
+
+  - Create namespace & secret
+
+  ```
+  apiVersion: v1
+  kind: Namespace
+  metadata:
+    name: wordpress
+  ---
+  apiVersion: v1
+  kind: Secret
+  metadata:
+    namespace: wordpress
+    name: mysql-pass
+  type: Opaque
+  data:
+    password: YXJpcDEyMw==
+  ```
+  
+  - Create persistent volume (pv)
+  
+  ```
+  apiVersion: v1
+  kind: PersistentVolume
+  metadata:
+    namespace: wordpress
+    name: wordpress-persistent-storage
+    labels:
+      app: wordpress
+      tier: frontend
+  spec:
+    capacity:
+      storage: 10Gi
+    accessModes:
+      - ReadWriteMany
+    nfs:
+      server: arip-kube-worker
+      path: "/html"
+  ---
+  apiVersion: v1
+  kind: PersistentVolume
+  metadata:
+    namespace: wordpress
+    name: mysql-persistent-storage
+    labels:
+      app: wordpress
+      tier: mysql
+  spec:
+    capacity:
+      storage: 10Gi
+    accessModes:
+      - ReadWriteMany
+    nfs:
+      server: arip-kube-worker
+      path: "/mysql"
+  ```
+  
+  - Create persistent volume claim (pvc)
+  
+  ```
+  apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    namespace: wordpress
+    name: wordpress-persistent-storage
+    labels:
+      app: wordpress
+  spec:
+    accessModes:
+      - ReadWriteMany
+    resources:
+      requests:
+        storage: 6Gi
+  ---
+  apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    namespace: wordpress
+    name: mysql-persistent-storage
+    labels:
+      app: wordpress
+  spec:
+    accessModes:
+      - ReadWriteMany
+    resources:
+      requests:
+        storage: 6Gi
+  ```
+  
+  - Deploy Mysql
+  
+  ```
+  apiVersion: v1
+  kind: Service
+  metadata:
+    namespace: wordpress
+    name: wordpress-mysql
+    labels:        
+      app: wordpress
+  spec:
+    ports:
+      - port: 3306
+    selector:
+      app: wordpress
+      tier: mysql
+    clusterIP: None
+  ---
+  apiVersion:  apps/v1
+  kind: Deployment
+  metadata:
+    namespace: wordpress
+    name: wordpress-mysql
+    labels:
+      app: wordpress
+  spec:
+    selector:
+      matchLabels:
+        app: wordpress
+        tier: mysql
+    strategy:
+      type: Recreate
+    template:
+      metadata:
+        labels:
+          app: wordpress
+          tier: mysql
+      spec:
+        containers:
+        - image: mysql:5.6
+          name: mysql
+          env:
+          - name: MYSQL_ROOT_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: mysql-pass   
+                key: password
+          ports:
+          - containerPort: 3306
+            name: mysql
+          volumeMounts:
+          - name: mysql-persistent-storage
+            mountPath: "/var/lib/mysql"
+        volumes:
+        - name: mysql-persistent-storage
+          persistentVolumeClaim:
+            claimName: mysql-persistent-storage
+
+  ```
+  
+  - Deploy Wordpress
+  
+  ```
+  apiVersion: v1
+  kind: Service
+  metadata:
+    namespace: wordpress
+    name: wordpress
+    labels:
+      app: wordpress
+  spec:
+    ports:
+      - nodePort: 30001
+        port: 80
+        targetPort: 80
+    selector:
+      app: wordpress
+      tier: frontend
+    type: NodePort
+  ---
+  apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    namespace: wordpress
+    name: wordpress
+    labels:
+      app: wordpress
+  spec:
+    selector:
+      matchLabels:
+        app: wordpress
+        tier: frontend
+    strategy:
+      type: Recreate
+    template:
+      metadata:
+        labels:
+          app: wordpress
+          tier: frontend
+      spec:
+        containers:
+        - image: wordpress:4.8-apache
+          name: wordpress
+          env:
+          - name: WORDPRESS_DB_HOST
+            value: wordpress-mysql
+          - name: WORDPRESS_DB_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: mysql-pass
+                key: password
+          ports:
+          - containerPort: 80
+            name: wordpress
+          volumeMounts:
+          - name: wordpress-persistent-storage
+            mountPath: "/var/www/html" 
+        volumes:
+        - name: wordpress-persistent-storage
+          persistentVolumeClaim:
+            claimName: wordpress-persistent-storage
+  ```
+  
+  - Check pod in wordpress namespace
+  
+  ```console
+  kubectl get pod -n wordpress -w
+  ```
+  
+  - Check directory nfs in master (/mnt/wordpress-wordpress-persistent-storage-pvc-973839eb-7c24-45b9-8be0-7beea6ead40a)
+  
+  ```console
+  cd /mnt/wordpress-wordpress-persistent-storage-pvc-973839eb-7c24-45b9-8be0-7beea6ead40a/ && ls
+  touch tesfrommaster
+  ```
+  
+  - Check directory nfs inside pod (/var/www/html)
+  
+  ```console
+  ls && ls frommaster
+  ```
+  
+# Jenkins & Sonarqube ce
