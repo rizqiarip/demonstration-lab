@@ -322,7 +322,7 @@
   - Create persistent volume claim (pvc)
   
   ```console
-  kubectl create -f [https://raw.githubusercontent.com/rizqiarip/repository-file/main/pvc.yaml](https://raw.githubusercontent.com/rizqiarip/repository-file/main/pvc.yaml)
+  kubectl create -f https://raw.githubusercontent.com/rizqiarip/repository-file/main/pvc.yaml
   ```
   
   - Deploy Mysql deployment
