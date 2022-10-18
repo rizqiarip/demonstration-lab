@@ -358,7 +358,26 @@
   ```
   
   - Update ingress, add host wordpress.arip with service wordpress
+  
+  ```
+  - host: wordpress.arip
+    http:
+      paths:
+        - path: /
+          pathType: Prefix
+          backend:
+            service:
+              name: wordpress
+              port:
+                number: 80
+  ```
+  
   - Define domain in /etc/hosts or /drivers/etc/hosts (windows)
+  
+  ```
+  10.8.60.229 nginx.arip apache.arip wordpress.arip
+  ```
+  
   - Tes access wordpress from cli or web browser
   
   ```console
