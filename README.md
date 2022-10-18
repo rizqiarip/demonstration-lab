@@ -170,10 +170,13 @@
   
   ```console
   helm repo add nfs-subdir-external-provisioner https://kubernetes-sigs.github.io/nfs-subdir-external-provisioner/
-  helm install nfs nfs-subdir-external-provisioner/nfs-subdir-external-provisioner --set nfs.server=10.8.60.228 
-  --set nfs.path=/data --set storageClass.name=nfs --set storageClass.defaultClass=true -n nfs --create-namespace
+  helm install nfs-subdir-external-provisioner nfs-subdir-external-provisioner/nfs-subdir-external-provisioner \
+  --create-namespace --namespace nfs-provisioner --set nfs.server=arip-kube-worker --set nfs.path=/data --set storageClass.defaultClass=true
   ```
   
+  - 
+  
 ## Deploy Aplikasi Wordpress + DB (Menggunakan PVC)
+  
 ## Instalasi dan Konfigurasi MetalLB untuk Load Balancer
 ## Deploy Aplikasi Nginx dengan eskpos akses Load Balancer
