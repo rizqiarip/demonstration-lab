@@ -2,7 +2,7 @@
 
   1. Gitlab & Sonarqube (10.8.60.174)
   2. Kubernetes Cluster (10.8.60.227, 10.8.60.228, 10.8.60.229, 10.8.60.230, 10.8.60.231)
-  3. Jenkins CI/CD (10.8.60.226)
+  3. Jenkins CI/CD (10.8.60.227)
 
 ## Gitlab-ce Installation
   
@@ -372,7 +372,7 @@
                 number: 80
   ```
   
-  - Define domain in /etc/hosts or /drivers/etc/hosts (windows)
+  - Define domain in /etc/hosts and /drivers/etc/hosts (windows)
   
   ```
   10.8.60.229 nginx.arip apache.arip wordpress.arip
@@ -385,3 +385,15 @@
   ```
 
 # Jenkins & Sonarqube ce
+
+## Setup Jenkins
+
+  - Deploy `Jenkins` with docker 
+  
+  ```console
+  sudo docker run -d -p 8080:8080 -p 50000:50000 --name my-jenkins --network=host jenkins/jenkins  
+  ```
+  
+  -
+  
+  -
