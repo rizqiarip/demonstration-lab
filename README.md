@@ -1,8 +1,8 @@
 # Demonstration Lab Documentation
 
-  1. Gitlab & Sonarqube (10.8.60.174)
-  2. Kubernetes Cluster (10.8.60.227, 10.8.60.228, 10.8.60.229, 10.8.60.230, 10.8.60.231)
-  3. Jenkins CI/CD (10.8.60.227)
+  1. Gitlab (10.8.60.174)
+  2. Kubernetes Cluster (10.8.60.227, 10.8.60.228)
+  3. Jenkins & Sonarqube (10.8.60.227:8080, 10.8.60.227:9000)
 
 ## Gitlab-ce Installation
   
@@ -391,9 +391,90 @@
   - Deploy `Jenkins` with docker 
   
   ```console
-  sudo docker run -d -p 8080:8080 -p 50000:50000 --name my-jenkins --network=host jenkins/jenkins  
+  sudo docker run -d -p 8080:8080 -p 50000:50000 --name my-jenkins --network=host jenkins/jenkins
   ```
   
-  -
+  - Access `Jenkins` from browser
   
-  -
+  ```
+  Unlock Jenkins use administrator password from /var/jenkins_home/secrets/initialAdminPassword > Create user and Set Jenkins url > Install suggested plugins
+  ```
+  
+  - Create namespace jenkins
+  
+  ```console
+  kubectl create namespace jenkins
+  ```
+  
+  - Create serviceaccout jenkins
+  
+  ```console
+  kubectl create sa jenkins -n jenkins
+  ```
+  
+  - Create secret from file
+  
+  ```
+  apiVersion: v1
+  kind: Secret
+  metadata:
+    name: jenkins
+    namespace: jenkins
+    annotations:
+      kubernetes.io/service-account.name: jenkins
+  type: kubernetes.io/service-account-token
+  ```
+  
+  - Create rolebindings for jenkins
+  
+  ```console
+  kubectl create rolebinding jenkins-admin-binding --clusterrole=admin --serviceaccount=jenkins:jenkins --namespace=jenkins
+  ```
+  
+  - Get token from secret for credential `Jenkins` (authentication k8s with jenkins)
+  
+  ```console
+  kubectl describe secret $(kubectl describe sa jenkins -n jenkins | grep Token | awk '{print $2}') -n jenkins
+  ```
+  
+  - Setup plugins Kubernetes, Gitlab, Sonarqube
+  
+  ```console
+  
+  ```
+  
+  - 
+  
+  ```console
+  
+  ```
+  
+  - 
+  
+  ```console
+  
+  ```
+  
+  - 
+  
+  ```console
+  
+  ```
+  
+  - 
+  
+  ```console
+  
+  ```
+  
+  - 
+  
+  ```console
+  
+  ```
+  
+  - 
+  
+  ```console
+  
+  ```
