@@ -400,13 +400,20 @@
   Unlock Jenkins use administrator password from /var/jenkins_home/secrets/initialAdminPassword > Create user and Set Jenkins url > Install suggested plugins
   ```
   
+  
+  - Setup plugins Kubernetes, Gitlab, Sonarqube
+  
+  ```console
+  Dashboard > Manage Jenkins > Manage plugins > Available plugins > Search and check Kubernetes plugin, Gitlab plugin, SonarQube Scanner for Jenkins > Install without restart > Wait until process installation finish  
+  ```
+    
   - Create namespace jenkins
   
   ```console
   kubectl create namespace jenkins
   ```
   
-  - Create serviceaccout jenkins
+  - Create serviceaccount jenkins
   
   ```console
   kubectl create sa jenkins -n jenkins
@@ -431,13 +438,27 @@
   kubectl create rolebinding jenkins-admin-binding --clusterrole=admin --serviceaccount=jenkins:jenkins --namespace=jenkins
   ```
   
+  - Disable Nodes
+  
+  ```
+  Dashboard > Manage Jenkins > Nodes > Built-In Node > Change the number of the executor to 0 > save
+  ```
+  
+  
   - Get token from secret for credential `Jenkins` (authentication k8s with jenkins)
   
   ```console
+  #write down token
   kubectl describe secret $(kubectl describe sa jenkins -n jenkins | grep Token | awk '{print $2}') -n jenkins
   ```
   
-  - Setup plugins Kubernetes, Gitlab, Sonarqube
+  - Configure Clouds
+  
+  ```
+  Dashboard > Manage Jenkins > Configure clouds > Fill Name=Kubernetes, Kubernetes URL=https://10.8.60.227:6443, check Disable https certificate check, Kubernetes Namespace=jenkins > Add credentials, Global credentials, Kind=Secret text, Scope=Global, Secret=(from previous step), ID=jenkins, Descriptions (optional), Add > Use credentials jenkins > Test connection (Connected to Kubernetes v1.25.2) > check WebSocket > Fill Jenkins URL with http://10.8.60.227:8080 > Save
+  ```
+  
+  - Configure Clouds (Jenkins)
   
   ```console
   
