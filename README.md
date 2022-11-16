@@ -184,6 +184,12 @@
   - Create ingress and target the two services that have been created
   
   ```
+  apiVersion: networking.k8s.io/v1
+  kind: Ingress
+  metadata:
+    name: ingress-arip
+    annotations:
+      nginx.ingress.kubernetes.io/rewrite-target: /
   spec:
     ingressClassName: nginx
     rules:
@@ -363,19 +369,29 @@
   ls && ls frommaster
   ```
   
-  - Update ingress, add host wordpress.arip with service wordpress
+  - Create ingress in wordpress namespace
   
   ```
-  - host: wordpress.arip
-    http:
-      paths:
-        - path: /
-          pathType: Prefix
-          backend:
-            service:
-              name: wordpress
-              port:
-                number: 80
+  apiVersion: networking.k8s.io/v1
+  kind: Ingress
+  metadata:
+    name: ingress-arip
+    namespace: wordpress
+    annotations:
+      nginx.ingress.kubernetes.io/rewrite-target: /
+  spec:
+    ingressClassName: nginx
+    rules:
+    - host: wordpress.arip
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: wordpress
+                port:
+                  number: 80
   ```
   
   - Define domain in /etc/hosts and /drivers/etc/hosts (windows)
@@ -543,31 +559,24 @@
   My account > Security > Fill Name, choose the type, select the expires date, and Generate
   ```
   
-## Create an analysis automation project (Sonarqube, Jenkins, Gitlab, Webhook)
+    - Configure `Sonarqube` system in `Jenkins`
+  
+  Dashboard > Manage Jenkins > Configure System > SonarQube servers > Fill the name (sonarqube), Server URL (http://10.8.60.227:9000), Server authentication token (Create new credential and use secret text type and Sonarqube token for the credential)
 
-### Configure System
+    - Configure `Sonarqube` tool  in `Jenkins`
   
-  Dashboard > Manage > Configure System
+  Dashboard > Manage Jenkins > Global Tool Configuration > SonarQube Scanner > Fill the tools name > Select the latest version of SonarQube Scanner
+
+## Create an analysis automation project (Sonarqube, Jenkins, Gitlab, Webhook)
   
-  - SonarQube servers
-  
-  Fill the name (sonarqube), Server URL (http://10.8.60.227:9000), Server authentication token (Create new credential and use secret text type and Sonarqube token for the credential)
-  
-  - Configure System
-  
-  ```
-  Dashboard > Manage > Configure System
-  ```
   - Create and configure Pipeline job in `Jenkins`
   
-  ```
-  Dashboard > New Item > Fill project name Choose pipeline > Ok > 
-  ```
-
-  - 
+  Dashboard > New Item > Fill project name Choose pipeline > Ok
   
-  ```console
+  - Configure pipeline
   
+  ```
+  Under Build Triggers, choose "Build When a change is pushed to GitLab", copy the webhook URL, checklist "Push events", on Advanced Generate token and copy
   ```
 
   - 
