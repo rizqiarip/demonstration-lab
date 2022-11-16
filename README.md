@@ -424,10 +424,8 @@
    
   - Setup plugins Kubernetes, Gitlab, Sonarqube
   
-  ```console
   Dashboard > Manage Jenkins > Manage plugins > Available plugins > Search and check Kubernetes plugin, Gitlab plugin, SonarQube Scanner for Jenkins > Install without restart > Wait until process installation finish  
-  ```
-
+  
   - Restart `jenkins` before running pipeline
   
   ```console
@@ -472,9 +470,7 @@
   
   - Disable Nodes
   
-  ```
   Dashboard > Manage Jenkins > Nodes > Built-In Node > Change the number of the executor to 0 > save
-  ```
     
   - Get token from secret for credential `Jenkins` (authentication k8s with jenkins)
   
@@ -485,15 +481,11 @@
   
   - Configure Clouds
   
-  ```
   Dashboard > Manage Jenkins > Configure clouds > Fill Name=Kubernetes, Kubernetes URL=https://10.8.60.227:6443, check Disable https certificate check, Kubernetes Namespace=jenkins > Add credentials, Global credentials, Kind=Secret text, Scope=Global, Secret=(from previous step), ID=jenkins, Descriptions (optional), Add > Use credentials jenkins > Test connection (Connected to Kubernetes v1.25.2) > check WebSocket > Fill Jenkins URL with http://10.8.60.227:8080 > Save
-  ```
   
   - Create project
-  
-  ```
+
   Dashboard > New Item > Fill the project name > Choose Pipeline > Ok
-  ```
   
   - Create pipeline
   
@@ -559,11 +551,11 @@
   My account > Security > Fill Name, choose the type, select the expires date, and Generate
   ```
   
-    - Configure `Sonarqube` system in `Jenkins`
+  - Configure Sonarqube system in Jenkins
   
   Dashboard > Manage Jenkins > Configure System > SonarQube servers > Fill the name (sonarqube), Server URL (http://10.8.60.227:9000), Server authentication token (Create new credential and use secret text type and Sonarqube token for the credential)
 
-    - Configure `Sonarqube` tool  in `Jenkins`
+  - Configure Sonarqube tool  in Jenkins
   
   Dashboard > Manage Jenkins > Global Tool Configuration > SonarQube Scanner > Fill the tools name > Select the latest version of SonarQube Scanner
 
