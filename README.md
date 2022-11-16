@@ -676,38 +676,44 @@
   git push #fill password with gitlab personal access token
   ```
 
-### Console output recent build on Jenkins
+  - Console output recent build on Jenkins
   
   ![image](https://user-images.githubusercontent.com/89076954/202255373-9b5a9359-39ac-4c04-8e5a-b665fddf6a93.png)
 
-### SonarQube Quality Gate status after run pipeline
+  - Sonarqube quality gate status after run pipeline on jenkins
   
   ![image](https://user-images.githubusercontent.com/89076954/202260816-dae0ba9e-11fb-4cfd-8db3-23eac1bc04c2.png)
 
-### Sonarqube report
+  - Sonarqube report
   
   ![image](https://user-images.githubusercontent.com/89076954/202260984-346b45b8-9fa6-40d9-bd08-5dc877678e3f.png)
 
-  - Push to repository Gitlab
+  - Check the issue of the Sonarqube report
   
-  ```console
+  ![image](https://user-images.githubusercontent.com/89076954/202261624-8bc22161-2b7e-4c2c-98ff-02b6264d255b.png)
+
+  - Fix issue (change <b> to <strong>)
   
+  ```
+  <strong>Demo By Nikhil</strong>
   ```
 
   - Push to repository Gitlab
   
   ```console
-  
+  git add .
+  git commit -m "edit app.js"
+  git push
   ```
 
   - Push to repository Gitlab
   
   ```console
+  - Sonarqube quality gate status after run pipeline on jenkins
   
-  ```
+  ![image](https://user-images.githubusercontent.com/89076954/202265796-b738c295-db39-431a-b65b-eb8279ce52d7.png)
 
-  - Push to repository Gitlab
+  - Sonarqube report
   
-  ```console
-  
-  ```
+  ![image](https://user-images.githubusercontent.com/89076954/202265890-d5ba55d5-f259-4c75-990e-93cbd814405f.png)
+
