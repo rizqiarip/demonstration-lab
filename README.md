@@ -458,28 +458,62 @@
   Dashboard > Manage Jenkins > Configure clouds > Fill Name=Kubernetes, Kubernetes URL=https://10.8.60.227:6443, check Disable https certificate check, Kubernetes Namespace=jenkins > Add credentials, Global credentials, Kind=Secret text, Scope=Global, Secret=(from previous step), ID=jenkins, Descriptions (optional), Add > Use credentials jenkins > Test connection (Connected to Kubernetes v1.25.2) > check WebSocket > Fill Jenkins URL with http://10.8.60.227:8080 > Save
   ```
   
-  - Configure Clouds (Jenkins)
+  - Restart `jenkins` before running pipeline
   
   ```console
-  
+  sudo docker stop jenkins
+  sudo docker start jenkins
+  or
+  http://10.8.60.227:8080/safeRestart
   ```
   
-  - 
-  
-  ```console
+  - Create project for tes deploy pod nodejs
   
   ```
-  
-  - 
-  
-  ```console
-  
+  Dashboard > New Item > Fill the project name > Choose Pipeline > Ok
   ```
   
-  - 
+  - Create pipeline
+  
+  ```
+  pipeline {
+  agent {
+    kubernetes {
+      yaml '''
+        apiVersion: v1
+        kind: Pod
+        spec:
+          containers:
+          - image: rizqiarif/nodejs:alpinev1
+            name: nodejs-con
+        '''
+    } 
+  }
+  stages {
+    stage('Exec container') {
+      steps {
+        container('nodejs-con') {
+          sh 'pwd'
+          sh 'ls'
+        }
+      }
+    }
+  }
+}
+  ```
+  
+  - Build pipeline
+  
+  Dashboard > Project > Build Now > Console output > Wait until the process finish
+  ![image](https://user-images.githubusercontent.com/89076954/202071561-fd761a5f-458e-43a4-92e2-80d9f797acc7.png)
+
+  - Access the nodejs app
   
   ```console
-  
+  kubectl get pod -n jenkins
+  kubectl expose pod nodejs-tes-36-gzp19-1dlw8-bpbfv --port 8000 --type NodePort -n jenkins
+  kubectl get svc -n jenkins
+  curl 10.8.60.227:30906 _#from previous command_
   ```
   
   - 
