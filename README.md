@@ -541,15 +541,11 @@
   
   - Access `Sonarqube` from browser (10.8.60.227:9000)
   
-  ```
   Fill authentication with username admin and password admin (default) > Redirect to change the default password > Setup DevOps platform integration, choose GitLab (optional) > Fill the Configuration name, GitLab API URL, and Personal Access Token > Save Configuration > Choose repository
-  ```
-
+  
   - Generate Token for credentials used
   
-  ```
   My account > Security > Fill Name, choose the type, select the expires date, and Generate
-  ```
   
   - Configure Sonarqube system in Jenkins
   
@@ -567,53 +563,150 @@
   
   - Configure pipeline
   
-  ```
-  Under Build Triggers, choose "Build When a change is pushed to GitLab", copy the webhook URL, checklist "Push events", on Advanced Generate token and copy
+  Under Build Triggers, choose "Build When a change is pushed to GitLab", copy the webhook URL, checklist "Push events", on Advanced Generate token and copy. 
+  Under Pipeline, use definition "Pipeline script from SCM", fill the Repository URL, create new credential use "username and password" type and fill with the authentication in gitlab, fill the "branches to build" with */main, use Script Path with Jenkinsfile, Save
+  
+  
+  - Create a Gitlab Webhook
+  
+  Go to the Gitlab Webhook creation, enter the Webhook URL, and the Webhook token, under Trigger, Checklist Push events, Add Webhook
+  
+  - Clone repository from gitlab
+  
+  ```console
+  git clone http://gitlab-ce.arip.com/gitlab-instance-84ea568f/tes-kanban.git
+  cd tes-kanban
   ```
 
-  - 
+  - Create sonar-project.properties
+  
+  ```
+  sonar.projectKey=gitlab-instance-84ea568f_tes-kanban_AYR2zQUT3QpvnSTRn7_G
+  ```
+
+  - Create Jenkinsfile
+  
+  ```
+  node {
+  stage('SCM') {
+    checkout scm
+  }
+  stage('SonarQube Analysis') {
+    def scannerHome = tool 'Sonarqube';
+    withSonarQubeEnv() {
+      sh "${scannerHome}/bin/sonar-scanner"
+    }
+  }
+}
+  ```
+
+  - Create condition in Sonarqube
+  
+  Dashboard Sonarqube > Quality Gates > Create > Add Condition > Bugs with value 1 > Choose permissions > and Projects (tes-kanban)
+  
+  note: Quality Gates will fails when bugs is more than 1
+
+### Create file for example app (source https://medium.com/code-to-express/sonarqube-static-code-analysis)
+  
+  - index.html
+  
+  ```
+  <!DOCTYPE html>
+  <html>
+      <head>
+  <title>sosnar lint demo</title>
+  <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet/less" type="text/css" href="./style.less" />
+  </head>
+  <body>
+      <div>
+        <h1 id="demo"></h1>
+        <h2>This is a H2 tag.</h2>
+        <small>LESS Variables documentation: <a href="#" title="LESS Variables documentation">http://lesscss.org/#-variables</a></small>
+      </div>
+      <input type="text" name="firstname" />
+      <b>Demo By Nikhil</b>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/less.js/3.9.0/less.min.js" ></script>
+      <script src="./app.js"></script>
+  </body>
+  </html>
+  ```
+
+  - style.less
+  
+  ```
+  @nice-blue: #5B83AD;
+
+  #header { 
+    color: @nice-blue; 
+    margin: 2em;
+  }
+  #header { 
+      color:#000; 
+      margin: 2em;
+    }
+
+  a {
+      font-family: 'Georgia', Georgia, serif; /* Noncompliant; 'Georgia' is duplicated */
+    }
+  ```
+
+  - app.js
+  
+  ```
+  var firstname = "nikhil1"
+
+  var lastname = "karkra"
+  var firstname = "nikhil"
+  document.getElementById('demo').innerHTML = `Hey i am ${firstname} ${lastname}, My name coming from Javascript`
+
+  var a = NaN;
+
+  if (a === NaN) {  // Noncompliant; always false
+    console.log("a is not a number");  // this is dead code
+  }
+  ```
+
+  - Push to repository
+  
+  ```console
+  git add .
+  git commit -m "add file file to repo"
+  git push #fill password with gitlab personal access token
+  ```
+
+### Console output recent build on Jenkins
+  
+  ![image](https://user-images.githubusercontent.com/89076954/202255373-9b5a9359-39ac-4c04-8e5a-b665fddf6a93.png)
+
+### SonarQube Quality Gate status after run pipeline
+  
+  ![image](https://user-images.githubusercontent.com/89076954/202260816-dae0ba9e-11fb-4cfd-8db3-23eac1bc04c2.png)
+
+### Sonarqube report
+  
+  ![image](https://user-images.githubusercontent.com/89076954/202260984-346b45b8-9fa6-40d9-bd08-5dc877678e3f.png)
+
+  - Push to repository Gitlab
   
   ```console
   
   ```
 
-  - 
+  - Push to repository Gitlab
   
   ```console
   
   ```
 
-  - 
+  - Push to repository Gitlab
   
   ```console
   
   ```
 
-  - 
-  
-  ```console
-  
-  ```
-
-  - 
-  
-  ```console
-  
-  ```
-
-  - 
-  
-  ```console
-  
-  ```
-
-  - 
-  
-  ```console
-  
-  ```
-
-  - 
+  - Push to repository Gitlab
   
   ```console
   
