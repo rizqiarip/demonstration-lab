@@ -418,9 +418,7 @@
   
   - Access `Jenkins` from browser (10.8.60.227:8080)
   
-  ```
   Unlock Jenkins use administrator password from /var/jenkins_home/secrets/initialAdminPassword > Create user and Set Jenkins url > Install suggested plugins
-  ```
    
   - Setup plugins Kubernetes, Gitlab, Sonarqube
   
@@ -468,14 +466,13 @@
   kubectl create rolebinding jenkins-admin-binding --clusterrole=admin --serviceaccount=jenkins:jenkins --namespace=jenkins
   ```
   
-  - Disable Nodes
+  - Disable Nodes Executor
   
   Dashboard > Manage Jenkins > Nodes > Built-In Node > Change the number of the executor to 0 > save
     
   - Get token from secret for credential `Jenkins` (authentication k8s with jenkins)
   
   ```console
-  #write down token
   kubectl describe secret $(kubectl describe sa jenkins -n jenkins | grep Token | awk '{print $2}') -n jenkins
   ```
   
@@ -606,11 +603,10 @@
   
   note: Quality Gates will fails when bugs is more than 1
 
-### Create file for example app (source https://medium.com/code-to-express/sonarqube-static-code-analysis)
-  
-  - index.html
-  
+  - Create file index.html for example testing
+    
   ```
+  #index.html
   <!DOCTYPE html>
   <html>
       <head>
@@ -633,7 +629,7 @@
   </html>
   ```
 
-  - style.less
+  - Create file style.less
   
   ```
   @nice-blue: #5B83AD;
@@ -652,7 +648,7 @@
     }
   ```
 
-  - app.js
+  - Create file app.js
   
   ```
   var firstname = "nikhil1"
@@ -688,27 +684,24 @@
   
   ![image](https://user-images.githubusercontent.com/89076954/202260984-346b45b8-9fa6-40d9-bd08-5dc877678e3f.png)
 
-  - Check the issue of the Sonarqube report
+  - Check the issues in Sonarqube
   
   ![image](https://user-images.githubusercontent.com/89076954/202261624-8bc22161-2b7e-4c2c-98ff-02b6264d255b.png)
 
-  - Fix issue (change <b> to <strong>)
+  - Fixed the issues by changing the existing index.html 
   
   ```
   <strong>Demo By Nikhil</strong>
   ```
 
-  - Push to repository Gitlab
+  - Push to repository
   
   ```console
-  git add .
-  git commit -m "edit app.js"
+  git add index.html
+  git commit -m "edit index.html"
   git push
   ```
 
-  - Push to repository Gitlab
-  
-  ```console
   - Sonarqube quality gate status after run pipeline on jenkins
   
   ![image](https://user-images.githubusercontent.com/89076954/202265796-b738c295-db39-431a-b65b-eb8279ce52d7.png)
