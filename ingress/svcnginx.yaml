@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"creationTimestamp":"2022-10-18T12:09:46Z","labels":{"app":"nginx"},"name":"nginx","namespace":"default","resourceVersion":"1153433","uid":"39b9673a-56a1-404f-827c-0c770b4c305c"},"spec":{"clusterIP":"10.97.180.253","clusterIPs":["10.97.180.253"],"externalName":"nginx.wordpress.svc.cluster.local","externalTrafficPolicy":"Cluster","internalTrafficPolicy":"Cluster","ipFamilies":["IPv4"],"ipFamilyPolicy":"SingleStack","ports":[{"nodePort":31550,"port":80,"protocol":"TCP","targetPort":80}],"selector":{"app":"nginx"},"sessionAffinity":"None","type":"ExternalName"},"status":{"loadBalancer":{}}}
+  creationTimestamp: "2022-10-18T12:09:46Z"
+  labels:
+    app: nginx
+  name: nginx
+  namespace: default
+  resourceVersion: "5201962"
+  uid: 39b9673a-56a1-404f-827c-0c770b4c305c
+spec:
+  externalName: nginxx
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: nginx
+  sessionAffinity: None
+  type: ExternalName
+status:
+  loadBalancer: {}

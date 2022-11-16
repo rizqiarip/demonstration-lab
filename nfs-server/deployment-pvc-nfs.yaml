@@ -1,0 +1,26 @@
+apiVersion: apps/v1 
+kind: Deployment
+metadata:
+  labels:
+    app: nginx-scnfs
+  name: nginx-scnfs-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx-scnfs
+  template:
+    metadata:
+      labels:
+        app: nginx-scnfs
+    spec:
+      volumes:
+        - name: nfs-vols
+          persistentVolumeClaim:
+            claimName: pvc-scnfs
+      containers:
+        - image: nginx
+          name: nginx
+          volumeMounts:
+          - name: nfs-vols
+            mountPath: /usr/share/nginx/html

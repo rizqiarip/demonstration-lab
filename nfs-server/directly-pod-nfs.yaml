@@ -1,0 +1,18 @@
+kind: Pod
+apiVersion: v1
+metadata:
+  name: pod-manual-nfs
+spec:
+  volumes:
+    - name: nfs-volume
+      nfs: 
+        server: arip-kube-worker
+        path: /data
+  containers:
+    - name: app
+      image: alpine
+      volumeMounts:
+        - name: nfs-volume
+          mountPath: /mnt
+      command: ["/bin/sh"]
+      args: ["-c", "while true; do touch /mnt/tes-method1; sleep 5; done"]
