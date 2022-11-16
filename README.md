@@ -563,11 +563,14 @@
   Under Build Triggers, choose "Build When a change is pushed to GitLab", copy the webhook URL, checklist "Push events", on Advanced Generate token and copy. 
   Under Pipeline, use definition "Pipeline script from SCM", fill the Repository URL, create new credential use "username and password" type and fill with the authentication in gitlab, fill the "branches to build" with */main, use Script Path with Jenkinsfile, Save
   
-  
   - Create a Gitlab Webhook
   
   Go to the Gitlab Webhook creation, enter the Webhook URL, and the Webhook token, under Trigger, Checklist Push events, Add Webhook
+
+  - Increase Nodes Executor
   
+  Dashboard > Manage Jenkins > Nodes > Built-In Node > Change the number of the executor to 2 > Save
+   
   - Clone repository from gitlab
   
   ```console
