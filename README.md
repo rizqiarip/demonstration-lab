@@ -7,15 +7,21 @@
 ## Gitlab-ce Installation
   
   - Install dependencies for `gitlab-ce` 
+  
   ```console
   yum install -y curl postfix ca-certificates
   ```
   
   - Install `gitlab-ce`
+  
   ```console
   curl https://packages.gitlab.com/install/repositories/gitlab/gitlab-ce/script.rpm.sh | sudo bash
   EXTERNAL_URL="http://gitlab-ce.arip.com" yum install -y gitlab-ce
   ```
+  
+  - Create Personal Access Token
+  
+  User Settings > Access Tokens > Fill Token name > Checklist the API permission (required) and checklist another permission if necessary > Create personal access token 
   
 ### Create issue list for kanban board
   
@@ -386,21 +392,20 @@
 
 # Jenkins & Sonarqube ce
 
-## Setup Jenkins
+## Setup and Configure Jenkins
 
-  - Deploy `Jenkins` with docker 
+  - Create `Jenkins` with docker 
   
   ```console
   sudo docker run -d -p 8080:8080 -p 50000:50000 --name my-jenkins --network=host jenkins/jenkins
   ```
   
-  - Access `Jenkins` from browser
+  - Access `Jenkins` from browser (10.8.60.227:8080)
   
   ```
   Unlock Jenkins use administrator password from /var/jenkins_home/secrets/initialAdminPassword > Create user and Set Jenkins url > Install suggested plugins
   ```
-  
-  
+   
   - Setup plugins Kubernetes, Gitlab, Sonarqube
   
   ```console
@@ -443,8 +448,7 @@
   ```
   Dashboard > Manage Jenkins > Nodes > Built-In Node > Change the number of the executor to 0 > save
   ```
-  
-  
+    
   - Get token from secret for credential `Jenkins` (authentication k8s with jenkins)
   
   ```console
@@ -466,8 +470,11 @@
   or
   http://10.8.60.227:8080/safeRestart
   ```
-  
-  - Create project for tes deploy pod nodejs
+
+
+## Create pod to k8s through pipeline
+
+  - Create project
   
   ```
   Dashboard > New Item > Fill the project name > Choose Pipeline > Ok
@@ -505,29 +512,94 @@
   - Build pipeline
   
   Dashboard > Project > Build Now > Console output > Wait until the process finish
-  ![image](https://user-images.githubusercontent.com/89076954/202071561-fd761a5f-458e-43a4-92e2-80d9f797acc7.png)
+  ![image](https://user-images.githubusercontent.com/89076954/202072058-a408982f-996f-4f90-ab64-53b8277d2762.png)
 
-  - Access the nodejs app
+  - Access the nodejs app while the pipeline is still running
   
   ```console
   kubectl get pod -n jenkins
   kubectl expose pod nodejs-tes-36-gzp19-1dlw8-bpbfv --port 8000 --type NodePort -n jenkins
   kubectl get svc -n jenkins
-  curl 10.8.60.227:30906 _#from previous command_
+  curl 10.8.60.227:30906 #port from previous command
+  ```
+  ![image](https://user-images.githubusercontent.com/89076954/202072224-c84276f9-9215-4b55-9584-30fab09e6168.png)
+
+## Setup Sonarqube
+
+  - Create `Sonarqube` with docker
+  
+  ```console
+  sudo docker run -d --name sonarqube -p 9000:9000 sonarqube
   ```
   
+  - Access `Sonarqube` from browser (10.8.60.227:9000)
+  
+  ```
+  Fill authentication with username admin and password admin (default) > Redirect to change the default password > Setup DevOps platform integration, choose GitLab (optional) > Fill the Configuration name, GitLab API URL, and Personal Access Token > Save Configuration > Choose repository
+  ```
+
+## Create an analysis automation project (Sonarqube, Jenkins, Gitlab, Webhook)
+
+  - Create and configure Pipeline job in `Jenkins`
+  
+  ```
+  Dashboard > New Item > Choose Pipeline > Ok > 
+  ```
+
   - 
   
   ```console
   
   ```
-  
+
   - 
   
   ```console
   
   ```
+
+  - 
   
+  ```console
+  
+  ```
+
+  - 
+  
+  ```console
+  
+  ```
+
+  - 
+  
+  ```console
+  
+  ```
+
+  - 
+  
+  ```console
+  
+  ```
+
+  - 
+  
+  ```console
+  
+  ```
+
+  - 
+  
+  ```console
+  
+  ```
+
+  - 
+  
+  ```console
+  
+  ```
+
   - 
   
   ```console
