@@ -411,8 +411,19 @@
   ```console
   Dashboard > Manage Jenkins > Manage plugins > Available plugins > Search and check Kubernetes plugin, Gitlab plugin, SonarQube Scanner for Jenkins > Install without restart > Wait until process installation finish  
   ```
-    
-  - Create namespace jenkins
+
+  - Restart `jenkins` before running pipeline
+  
+  ```console
+  sudo docker stop jenkins
+  sudo docker start jenkins
+  or
+  http://10.8.60.227:8080/safeRestart
+  ```
+  
+## Create pod to k8s through pipeline
+
+  - Create namespace jenkins in k8s
   
   ```console
   kubectl create namespace jenkins
@@ -462,18 +473,6 @@
   Dashboard > Manage Jenkins > Configure clouds > Fill Name=Kubernetes, Kubernetes URL=https://10.8.60.227:6443, check Disable https certificate check, Kubernetes Namespace=jenkins > Add credentials, Global credentials, Kind=Secret text, Scope=Global, Secret=(from previous step), ID=jenkins, Descriptions (optional), Add > Use credentials jenkins > Test connection (Connected to Kubernetes v1.25.2) > check WebSocket > Fill Jenkins URL with http://10.8.60.227:8080 > Save
   ```
   
-  - Restart `jenkins` before running pipeline
-  
-  ```console
-  sudo docker stop jenkins
-  sudo docker start jenkins
-  or
-  http://10.8.60.227:8080/safeRestart
-  ```
-
-
-## Create pod to k8s through pipeline
-
   - Create project
   
   ```
@@ -538,18 +537,31 @@
   Fill authentication with username admin and password admin (default) > Redirect to change the default password > Setup DevOps platform integration, choose GitLab (optional) > Fill the Configuration name, GitLab API URL, and Personal Access Token > Save Configuration > Choose repository
   ```
 
+  - Generate Token for credentials used
+  
+  ```
+  My account > Security > Fill Name, choose the type, select the expires date, and Generate
+  ```
+  
 ## Create an analysis automation project (Sonarqube, Jenkins, Gitlab, Webhook)
 
+### Configure System
+  
+  Dashboard > Manage > Configure System
+  
+  - SonarQube servers
+  
+  Fill the name (sonarqube), Server URL (http://10.8.60.227:9000), Server authentication token (Create new credential and use secret text type and Sonarqube token for the credential)
+  
+  - Configure System
+  
+  ```
+  Dashboard > Manage > Configure System
+  ```
   - Create and configure Pipeline job in `Jenkins`
   
   ```
-  Dashboard > New Item > Choose Pipeline > Ok > 
-  ```
-
-  - 
-  
-  ```console
-  
+  Dashboard > New Item > Fill project name Choose pipeline > Ok > 
   ```
 
   - 
