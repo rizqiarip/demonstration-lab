@@ -2,7 +2,7 @@
 
   1. Gitlab (10.8.60.174)
   2. Kubernetes Cluster (10.8.60.227, 10.8.60.228)
-  3. Jenkins & Sonarqube (10.8.60.227:8080, 10.8.60.227:9000)
+  3. Jenkins & Sonarqube (10.8.60.227:8080 and 10.8.60.240:8080, 10.8.60.227:9000)
 
 ## Gitlab-ce Installation
   
