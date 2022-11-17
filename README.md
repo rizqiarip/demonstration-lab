@@ -115,11 +115,11 @@
   sudo apt install -y helm
   ```
 
-## Instalasi dan Konfigurasi MetalLB untuk Load Balancer
+## Install and Configure MetalLB for LoadBalancer
   
   - Set strictARP value to "true"
   
-  ```console
+  ```
   apiVersion: kubeproxy.config.k8s.io/v1alpha1
   kind: KubeProxyConfiguration
   mode: "ipvs"
@@ -161,7 +161,7 @@
   kubectl delete deploy nginx-test && kubectl delete svc nginx-test
   ```
   
-## Instalasi dan konfigurasi ingress controller Nginx 
+## Install and Configure Ingress Controller Nginx 
 
   - Install Ingress Controller Nginx using helm (Master node)
   
@@ -228,7 +228,7 @@
   curl apache.arip
   ```
   
-## Membuat dynamic Storageclass dengan NFS
+## Create dynamic Storageclass with NFS
 
   - Install `nfs-server` in Master and Worker node
   
@@ -286,7 +286,7 @@
   
   - Create persistent volume claim (pvc) using nfs-client storageclass
   
-  ```console
+  ```
   apiVersion: v1
   kind: PersistentVolumeClaim
   metadata:
@@ -316,7 +316,7 @@
           mountPath: /usr/share/nginx/html
   ```
       
-## Deploy Aplikasi Wordpress + DB (Menggunakan PVC)
+## Deploy wordpress with database mysql and persistent volume claim
 
   - Create namespace & secret
 
