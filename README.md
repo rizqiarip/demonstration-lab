@@ -15,7 +15,7 @@
   - Install `gitlab-ce`
   
   ```console
-  curl https://packages.gitlab.com/install/repositories/gitlab/gitlab-ce/script.rpm.sh | sudo bash
+  curl -sS https://packages.gitlab.com/install/repositories/gitlab/gitlab-ce/script.rpm.sh | sudo bash
   EXTERNAL_URL="http://gitlab-ce.arip.com" yum install -y gitlab-ce
   ```
   
