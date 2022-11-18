@@ -575,30 +575,7 @@
   
   - Configure Pipeline
   
-  ```
-  pipeline {
-    agent any
-    stages {
-        stage('Deploy App') {
-            environment {
-                USERNAME = 'arip'
-                PASSWORD = 'arip123'
-                IP_TARGET = '10.8.60.227'
-                IMAGE = 'rizqiarif/nodejs:alpinev1'
-                PORT = '8000'
-                DEPLOYMENT_NAME = 'nodejs'
-                
-            }
-            steps {
-                sh 'sshpass -p ${PASSWORD} ssh ${USERNAME}@${IP_TARGET} kubectl create deployment ${DEPLOYMENT_NAME} --image ${IMAGE}'
-                sh 'sshpass -p ${PASSWORD} ssh ${USERNAME}@${IP_TARGET} kubectl expose deployment ${DEPLOYMENT_NAME} --port ${PORT} --type NodePort'
-                sh 'sshpass -p ${PASSWORD} ssh ${USERNAME}@${IP_TARGET} kubectl get svc ${DEPLOYMENT_NAME}'
-                sh 'sshpass -p ${PASSWORD} ssh ${USERNAME}@${IP_TARGET} kubectl get deployment ${DEPLOYMENT_NAME}'
-                }
-            }
-        }
-    }
-    ```
+ 
     
     - Console output of the pipeline
     
@@ -608,9 +585,8 @@
 
     - Access app
     
-    ```
     Browse http://10.8.60.227:32039
-    ```
+    
     ![image](https://user-images.githubusercontent.com/89076954/202595476-8c70109d-77cb-495d-81a6-fe5dc38d31ae.png)
 
 ## Setup Sonarqube
