@@ -149,6 +149,7 @@
     addresses:
     - 10.8.60.229-10.8.60.231
   ---
+  apiVersion: metallb.io/v1beta1
   kind: L2Advertisement
   metadata:
     name: example
@@ -158,7 +159,7 @@
   - first-pool
   ```
    
-  - Tes deployment nginx using assigned ip loadbalancer
+  - Tes deployment nginx using LoadBalancer type services
   
   ```console
   kubectl create deploy nginx-test --image nginx && kubectl expose deploy nginx-test --port 80 --type LoadBalancer
