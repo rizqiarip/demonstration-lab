@@ -408,7 +408,7 @@
 
 # Jenkins & Sonarqube ce
 
-## Setup and Configure Jenkins
+## Setup and Configure Jenkins using docker in 10.8.60.227
 
   - Create `Jenkins` with docker 
   
@@ -418,22 +418,13 @@
   
   - Access `Jenkins` from browser (10.8.60.227:8080)
   
-  Unlock Jenkins use administrator password from /var/jenkins_home/secrets/initialAdminPassword > Create user and Set Jenkins url > Install suggested plugins
+  Unlock Jenkins use administrator password from /var/jenkins_home/secrets/initialAdminPassword > Create user and Set Jenkins url > Install suggested plugins > Create first admin user > Configure Instance Configuration > Start using Jenkins
    
   - Setup plugins Kubernetes, Gitlab, Sonarqube
   
-  Dashboard > Manage Jenkins > Manage plugins > Available plugins > Search and check Kubernetes plugin, Gitlab plugin, SonarQube Scanner for Jenkins > Install without restart > Wait until process installation finish  
+  Dashboard > Manage Jenkins > Manage plugins > Available plugins > Search and check Kubernetes plugin, Gitlab plugin, SonarQube Scanner for Jenkins > Download now and install after restart > Wait until process installation finish  
   
-  - Restart `jenkins` before running pipeline
-  
-  ```console
-  sudo docker stop jenkins
-  sudo docker start jenkins
-  or
-  http://10.8.60.227:8080/safeRestart
-  ```
-  
-## Create pod to k8s through pipeline
+## Deploy pod to K8s through pipeline
 
   - Create namespace jenkins in k8s
   
@@ -479,6 +470,15 @@
   - Configure Clouds
   
   Dashboard > Manage Jenkins > Configure clouds > Fill Name=Kubernetes, Kubernetes URL=https://10.8.60.227:6443, check Disable https certificate check, Kubernetes Namespace=jenkins > Add credentials, Global credentials, Kind=Secret text, Scope=Global, Secret=(from previous step), ID=jenkins, Descriptions (optional), Add > Use credentials jenkins > Test connection (Connected to Kubernetes v1.25.2) > check WebSocket > Fill Jenkins URL with http://10.8.60.227:8080 > Save
+    
+  - Restart `Jenkins` before start running pipeline
+  
+  ```console
+  sudo docker stop jenkins
+  sudo docker start jenkins
+  or
+  http://10.8.60.227:8080/safeRestart
+  ```
   
   - Create project
 
@@ -527,6 +527,88 @@
   curl 10.8.60.227:30906 #port from previous command
   ```
   ![image](https://user-images.githubusercontent.com/89076954/202072224-c84276f9-9215-4b55-9584-30fab09e6168.png)
+  
+### Automation deployment
+
+  - Installation Jenkins
+  
+  ```console
+  sudo apt-get install openjdk-11-jdk -y
+  ```
+  
+  - Importing GPG key fo verifies package integrity
+  
+  ```console
+  curl -fsSL https://pkg.jenkins.io/debian-stable/jenkins.io.key | sudo tee /usr/share/keyrings/jenkins-keyring.asc > /dev/null
+  ```
+  
+  - Add Jenkins repo and provide authentication key
+  
+  ```
+  echo deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] https://pkg.jenkins.io/debian-stable binary/ | sudo tee /etc/apt/sources.list.d/jenkins.list > /dev/null
+  ```
+  
+  - Install Jenkins
+  
+  ```console
+  sudo apt update
+  sudo apt install jenkins -y
+  sudo systemctl status jenkins
+  ```
+  
+  - Allow port 8080
+  
+  ```console
+  sudo ufw allow 8080
+  sudo ufw enable
+  ```
+  
+  - Access Jenkins
+  
+  ```
+  http://10.8.60.240:8080
+  ```
+  
+  - Create Pipeline
+  
+  Dashboard > New Item > Fill name > Choose Pipeline > Ok
+  
+  - Configure Pipeline
+  
+  ```
+  pipeline {
+    agent any
+    stages {
+        stage('Deploy App') {
+            environment {
+                USERNAME = 'arip'
+                PASSWORD = 'arip123'
+                IP_TARGET = '10.8.60.227'
+                IMAGE = 'rizqiarif/nodejs:alpinev1'
+                PORT = '8000'
+                DEPLOYMENT_NAME = 'nodejs'
+                
+            }
+            steps {
+                sh 'sshpass -p ${PASSWORD} ssh ${USERNAME}@${IP_TARGET} kubectl create deployment ${DEPLOYMENT_NAME} --image ${IMAGE}'
+                sh 'sshpass -p ${PASSWORD} ssh ${USERNAME}@${IP_TARGET} kubectl expose deployment ${DEPLOYMENT_NAME} --port ${PORT} --type NodePort'
+                sh 'sshpass -p ${PASSWORD} ssh ${USERNAME}@${IP_TARGET} kubectl get svc ${DEPLOYMENT_NAME}'
+                sh 'sshpass -p ${PASSWORD} ssh ${USERNAME}@${IP_TARGET} kubectl get deployment ${DEPLOYMENT_NAME}'
+                }
+            }
+        }
+    }
+    ```
+    
+    - Console output of the pipeline
+    
+    Build Now > Wait until process finish or see the console output to see the pipeline process
+    ![image](https://user-images.githubusercontent.com/89076954/202595080-e4ee4bda-f7d7-4895-9e4d-555f6af69de8.png)
+
+    - Access app
+    
+    Browse http://10.8.60.227:32039
+    ![image](https://user-images.githubusercontent.com/89076954/202595476-8c70109d-77cb-495d-81a6-fe5dc38d31ae.png)
 
 ## Setup Sonarqube
 
