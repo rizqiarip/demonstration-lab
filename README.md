@@ -575,19 +575,42 @@
   
   - Configure Pipeline
   
- 
+   ```
+  pipeline {
+    agent any
+    stages {
+        stage('Deploy App') {
+            environment {
+                USERNAME = 'arip'
+                PASSWORD = 'arip123'
+                IP_TARGET = '10.8.60.227'
+                IMAGE = 'rizqiarif/nodejs:alpinev1'
+                PORT = '8000'
+                DEPLOYMENT_NAME = 'nodejs'
+                
+            }
+            steps {
+                sh 'sshpass -p ${PASSWORD} ssh ${USERNAME}@${IP_TARGET} kubectl create deployment ${DEPLOYMENT_NAME} --image ${IMAGE}'
+                sh 'sshpass -p ${PASSWORD} ssh ${USERNAME}@${IP_TARGET} kubectl expose deployment ${DEPLOYMENT_NAME} --port ${PORT} --type NodePort'
+                sh 'sshpass -p ${PASSWORD} ssh ${USERNAME}@${IP_TARGET} kubectl get svc ${DEPLOYMENT_NAME}'
+                sh 'sshpass -p ${PASSWORD} ssh ${USERNAME}@${IP_TARGET} kubectl get deployment ${DEPLOYMENT_NAME}'
+                }
+            }
+        }
+    }
+    ``` 
     
-    - Console output of the pipeline
+  - Console output of the pipeline
     
-    Build Now > Wait until process finish or see the console output to see the pipeline process
+  Build Now > Wait until process finish or see the console output to see the pipeline process
     
-    ![image](https://user-images.githubusercontent.com/89076954/202595080-e4ee4bda-f7d7-4895-9e4d-555f6af69de8.png)
+  ![image](https://user-images.githubusercontent.com/89076954/202595080-e4ee4bda-f7d7-4895-9e4d-555f6af69de8.png)
 
-    - Access app
+  - Access app
     
-    Browse http://10.8.60.227:32039
+  Browse http://10.8.60.227:32039
     
-    ![image](https://user-images.githubusercontent.com/89076954/202595476-8c70109d-77cb-495d-81a6-fe5dc38d31ae.png)
+  ![image](https://user-images.githubusercontent.com/89076954/202595476-8c70109d-77cb-495d-81a6-fe5dc38d31ae.png)
 
 ## Setup Sonarqube
 
