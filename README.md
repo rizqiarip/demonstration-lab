@@ -565,7 +565,7 @@ spec:
   
 ## Automation deployment
 
-  - Installation `Jenkins`
+  - Installation `Jenkins` in 10.8.60.240
   
   ```console
   sudo apt-get install openjdk-11-jdk -y
