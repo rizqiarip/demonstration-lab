@@ -575,7 +575,7 @@
   
   - Configure Pipeline
   
-   ```
+  ```
   pipeline {
     agent any
     stages {
