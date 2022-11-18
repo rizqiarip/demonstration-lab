@@ -585,7 +585,7 @@ spec:
   
   - Install `Jenkins`
   
-  ```
+  ```console
   sudo apt update
   sudo apt install jenkins -y
   sudo systemctl status jenkins
