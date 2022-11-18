@@ -550,7 +550,7 @@
   
   - Install Jenkins
   
-  ```console
+  ```
   sudo apt update
   sudo apt install jenkins -y
   sudo systemctl status jenkins
@@ -603,11 +603,13 @@
     - Console output of the pipeline
     
     Build Now > Wait until process finish or see the console output to see the pipeline process
+    
     ![image](https://user-images.githubusercontent.com/89076954/202595080-e4ee4bda-f7d7-4895-9e4d-555f6af69de8.png)
 
     - Access app
     
     Browse http://10.8.60.227:32039
+    
     ![image](https://user-images.githubusercontent.com/89076954/202595476-8c70109d-77cb-495d-81a6-fe5dc38d31ae.png)
 
 ## Setup Sonarqube
