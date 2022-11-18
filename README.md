@@ -264,20 +264,30 @@
   - Method 1 connecting pod to `nfs-server` directly
   
   ```
+  kind: Pod
+  apiVersion: v1
+  metadata:
+    name: pod-manual-nfs
   spec:
-  volumes:
-    - name: nfs-volume
-      nfs:
-        server: arip-kube-worker
-        path: /data
-  containers:
-    - name: app
-      image: alpine
-      volumeMounts:
-        - name: nfs-volume
-          mountPath: /mnt
-      command: ["/bin/sh"]
-      args: ["-c", "while true; do touch /mnt/tes-method1; sleep 5; done"]
+    volumes:
+      - name: nfs-volume
+        nfs:
+          server: arip-kube-worker
+          path: /data
+    containers:
+      - name: app
+        image: alpine
+        volumeMounts:
+          - name: nfs-volume
+            mountPath: /mnt
+        command: ["/bin/sh"]
+        args: ["-c", "while true; do touch /mnt/tes-method1; sleep 5; done"]
+
+  ```
+  
+  ```console
+  kubectl create -f direct-nfs.yaml
+  ls /mnt/tes-method1
   ```
   
   - Method 2 using persistent volume claim and storageclass
@@ -307,20 +317,40 @@
   
   - Create deployment nginx with NFS mount
   
-  ```console
-  spec:
-    volumes:
-      - name: nfs-vols
-        persistentVolumeClaim:
-          claimName: pvc-scnfs
-    containers:
-      - image: nginx
-        name: nginx
-        volumeMounts:
-        - name: nfs-vols
-          mountPath: /usr/share/nginx/html
   ```
-      
+  apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: nginx-scnfs
+  name: nginx-scnfs-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx-scnfs
+  template:
+    metadata:
+      labels:
+        app: nginx-scnfs
+    spec:
+      volumes:
+        - name: nfs-vols
+          persistentVolumeClaim:
+            claimName: pvc-scnfs
+      containers:
+        - image: nginx
+          name: nginx
+          volumeMounts:
+          - name: nfs-vols
+            mountPath: /usr/share/nginx/html
+  ```
+  
+  ```console
+  kubectl create -f deploy-nfs.yaml
+  ls /mnt
+  ```
+  
 ## Deploy wordpress with database mysql and persistent volume claim
 
   - Create namespace & secret
