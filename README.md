@@ -530,7 +530,7 @@
   
 ### Automation deployment
 
-  - Installation Jenkins
+  - Installation `Jenkins`
   
   ```console
   sudo apt-get install openjdk-11-jdk -y
@@ -542,13 +542,13 @@
   curl -fsSL https://pkg.jenkins.io/debian-stable/jenkins.io.key | sudo tee /usr/share/keyrings/jenkins-keyring.asc > /dev/null
   ```
   
-  - Add Jenkins repo and provide authentication key
+  - Add `Jenkins` repo and provide authentication key
   
   ```
   echo deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] https://pkg.jenkins.io/debian-stable binary/ | sudo tee /etc/apt/sources.list.d/jenkins.list > /dev/null
   ```
   
-  - Install Jenkins
+  - Install `Jenkins`
   
   ```
   sudo apt update
@@ -563,7 +563,7 @@
   sudo ufw enable
   ```
   
-  - Access Jenkins
+  - Access `Jenkins`
   
   ```
   http://10.8.60.240:8080
@@ -612,7 +612,7 @@
     
   ![image](https://user-images.githubusercontent.com/89076954/202595476-8c70109d-77cb-495d-81a6-fe5dc38d31ae.png)
 
-## Setup Sonarqube
+## Setup Sonarqube with Jenkins 227
 
   - Create `Sonarqube` with docker
   
@@ -628,11 +628,11 @@
   
   My account > Security > Fill Name, choose the type, select the expires date, and Generate
   
-  - Configure Sonarqube system in Jenkins
+  - Configure Sonarqube system in `Jenkins`
   
   Dashboard > Manage Jenkins > Configure System > SonarQube servers > Fill the name (sonarqube), Server URL (http://10.8.60.227:9000), Server authentication token (Create new credential and use secret text type and Sonarqube token for the credential)
 
-  - Configure Sonarqube tool  in Jenkins
+  - Configure Sonarqube tool  in `Jenkins`
   
   Dashboard > Manage Jenkins > Global Tool Configuration > SonarQube Scanner > Fill the tools name > Select the latest version of SonarQube Scanner
 
@@ -647,7 +647,7 @@
   Under Build Triggers, choose "Build When a change is pushed to GitLab", copy the webhook URL, checklist "Push events", on Advanced Generate token and copy. 
   Under Pipeline, use definition "Pipeline script from SCM", fill the Repository URL, create new credential use "username and password" type and fill with the authentication in gitlab, fill the "branches to build" with */main, use Script Path with Jenkinsfile, Save
   
-  - Create a Gitlab Webhook
+  - Create a `Gitlab` Webhook
   
   Go to the Gitlab Webhook creation, enter the Webhook URL, and the Webhook token, under Trigger, Checklist Push events, Add Webhook
 
@@ -684,7 +684,7 @@
 }
   ```
 
-  - Create condition in Sonarqube
+  - Create condition in `Sonarqube`
   
   Dashboard Sonarqube > Quality Gates > Create > Add Condition > Bugs with value 1 > Choose permissions > and Projects (tes-kanban)
   
@@ -759,7 +759,7 @@
   git push #fill password with gitlab personal access token
   ```
 
-  - Console output recent build on Jenkins
+  - Console output recent build on `Jenkins`
   
   ![image](https://user-images.githubusercontent.com/89076954/202255373-9b5a9359-39ac-4c04-8e5a-b665fddf6a93.png)
 
@@ -789,11 +789,11 @@
   git push
   ```
 
-  - Sonarqube quality gate status after run pipeline on jenkins
+  - `Sonarqube` quality gate status after run pipeline on jenkins
   
   ![image](https://user-images.githubusercontent.com/89076954/202265796-b738c295-db39-431a-b65b-eb8279ce52d7.png)
 
-  - Sonarqube report
+  - `Sonarqube` report
   
   ![image](https://user-images.githubusercontent.com/89076954/202265890-d5ba55d5-f259-4c75-990e-93cbd814405f.png)
 
