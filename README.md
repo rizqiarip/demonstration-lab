@@ -550,7 +550,7 @@ spec:
   
   - Build pipeline
   
-  Dashboard > Project > Build Now > Console output > Wait until the process finish
+  Dashboard > Project > Build Now > Console output
   ![image](https://user-images.githubusercontent.com/89076954/202072058-a408982f-996f-4f90-ab64-53b8277d2762.png)
 
   - Access the nodejs app while the pipeline is still running
@@ -571,7 +571,7 @@ spec:
   sudo apt-get install openjdk-11-jdk -y
   ```
   
-  - Importing GPG key fo verifies package integrity
+  - Importing GPG key to verifies package integrity
   
   ```console
   curl -fsSL https://pkg.jenkins.io/debian-stable/jenkins.io.key | sudo tee /usr/share/keyrings/jenkins-keyring.asc > /dev/null
